@@ -3,131 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — CRM WhatsApp Mini</title>
+<title>Follow Up — CRM WhatsApp Mini</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <h2>Masuk Admin</h2>
-    <input type="email" id="loginEmail" placeholder="Email admin">
-    <input type="password" id="loginPassword" placeholder="Password">
-    <button class="btn" onclick="doLogin()">Masuk</button>
+<div class="sheet-backdrop open" id="loginScreen" style="align-items:center;">
+  <div class="sheet" style="border-radius:20px;max-width:380px;">
+    <h2>Masuk</h2>
+    <div class="phone">Login pakai akun yang didaftarkan admin</div>
+    <div class="field-label">Email</div>
+    <input type="email" class="note-box" id="loginEmail" placeholder="email@toko.com">
+    <div class="field-label">Password</div>
+    <input type="password" class="note-box" id="loginPassword" placeholder="Password">
+    <div class="sheet-actions">
+      <button class="btn btn-primary" style="flex:1;" onclick="doLogin()">Masuk</button>
+    </div>
     <div id="loginError" style="color:var(--rust);font-size:13px;margin-top:10px;"></div>
   </div>
 </div>
 
-<div class="shell" id="mainApp" style="display:none;">
-  <div class="sidebar">
-    <div class="logo">CRM<span>·</span>Mini</div>
-    <div class="logo-sub">Panel Admin</div>
+<div class="app" id="mainApp" style="display:none;">
+  <header>
+    <div>
+      <div class="brand-name" id="brandName">Toko Anda</div>
+      <div class="brand-sub">Follow Up Leads</div>
+    </div>
+    <div class="avatar" id="avatarInitial">--</div>
+  </header>
 
-    <div class="nav-item active" data-page="dashboard"><span class="nav-dot"></span>Dashboard</div>
-    <div class="nav-item" data-page="tenants"><span class="nav-dot"></span>Klien / Tenant</div>
-    <div class="nav-item" data-page="wa-settings"><span class="nav-dot"></span>Setting API WA</div>
-    <div class="nav-item" data-page="broadcast"><span class="nav-dot"></span>Broadcast</div>
+  <div class="summary">
+    <div class="num" id="overdueCount">0</div>
+    <div class="label">leads belum di-follow up lebih dari 2 hari</div>
   </div>
 
-  <div class="main">
-    <!-- DASHBOARD -->
-    <div class="page" id="page-dashboard">
-      <div class="page-head">
-        <div>
-          <div class="page-title">Dashboard</div>
-          <div class="page-sub">Ringkasan seluruh klien</div>
-        </div>
-      </div>
-      <div class="ribbon">
-        <div class="ribbon-item"><div class="ribbon-num" id="statTotalTenant">-</div><div class="ribbon-label">Klien aktif</div></div>
-        <div class="ribbon-item"><div class="ribbon-num sage" id="statTotalLeads">-</div><div class="ribbon-label">Total leads</div></div>
-        <div class="ribbon-item"><div class="ribbon-num rust" id="statQuotaLow">-</div><div class="ribbon-label">Klien kuota hampir habis</div></div>
-      </div>
+  <div class="filters" id="filters">
+    <div class="chip active" data-f="semua">Semua</div>
+    <div class="chip" data-f="baru">Baru</div>
+    <div class="chip" data-f="proses">Diproses</div>
+    <div class="chip" data-f="deal">Deal</div>
+    <div class="chip" data-f="lewat">Terlambat</div>
+  </div>
+
+  <div class="list" id="list">
+    <div class="empty-state" id="emptyState">Memuat data...</div>
+  </div>
+</div>
+
+<button class="fab" onclick="openSheet(null)">+ Tambah Lead Manual</button>
+
+<div class="sheet-backdrop" id="backdrop">
+  <div class="sheet">
+    <button class="close-x" onclick="closeSheet()">&times;</button>
+    <div class="sheet-handle"></div>
+    <h2 id="sheetName">Nama Lead</h2>
+    <div class="phone" id="sheetPhone">08xx-xxxx-xxxx</div>
+
+    <div class="field-label">Status</div>
+    <div class="status-row" id="statusRow">
+      <div class="status-opt" data-s="baru">Baru</div>
+      <div class="status-opt" data-s="proses">Diproses</div>
+      <div class="status-opt" data-s="deal">Deal</div>
+      <div class="status-opt" data-s="batal">Batal</div>
     </div>
 
-    <!-- TENANTS -->
-    <div class="page" id="page-tenants" style="display:none;">
-      <div class="page-head">
-        <div>
-          <div class="page-title">Klien / Tenant</div>
-          <div class="page-sub">Kelola akun UMKM yang pakai CRM ini</div>
-        </div>
-        <button class="btn" onclick="openAddTenant()">+ Tambah Klien</button>
-      </div>
-      <table>
-        <thead><tr><th>Nama Toko</th><th>Paket</th><th>Kuota</th><th>Status</th></tr></thead>
-        <tbody id="tenantTableBody"></tbody>
-      </table>
-    </div>
+    <div class="field-label" id="nameFieldLabel" style="display:none;">Nama Lead</div>
+    <input type="text" class="note-box" id="nameInput" style="display:none;" placeholder="Nama calon pembeli">
+    <div class="field-label" id="phoneFieldLabel" style="display:none;">Nomor WhatsApp</div>
+    <input type="text" class="note-box" id="phoneInput" style="display:none;" placeholder="08xxxxxxxxxx">
 
-    <!-- WA SETTINGS -->
-    <div class="page" id="page-wa-settings" style="display:none;">
-      <div class="page-head">
-        <div>
-          <div class="page-title">Setting API WhatsApp</div>
-          <div class="page-sub">Halaman ini cuma bisa lo akses — API key WA gak pernah dikirim ke sisi user</div>
-        </div>
-      </div>
-      <div class="panel-box">
-        <div class="field-label">Token Admin (buat otorisasi ke Cloudflare Worker)</div>
-        <input type="password" class="input-field" id="adminToken" placeholder="Token yang sama dengan ADMIN_TOKEN di Worker">
-        <div class="field-label">Nomor WA Pengirim (opsional, info aja)</div>
-        <input type="text" class="input-field" id="senderInfo" placeholder="08xxxxxxxxxx">
-        <button class="btn" style="margin-top:14px;" onclick="saveAdminToken()">Simpan di Perangkat Ini</button>
-        <div class="desc" style="margin-top:10px;">
-          Token ini cuma disimpen di browser HP lo (localStorage), gak pernah masuk ke database/GitHub.
-          API key WhatsApp yang sesungguhnya disimpen di Cloudflare Worker, terpisah total dari sini.
-        </div>
-      </div>
-    </div>
+    <div class="field-label">Catatan follow up</div>
+    <textarea class="note-box" id="noteBox" placeholder="Tulis catatan, misalnya: sudah kirim katalog, tunggu konfirmasi..."></textarea>
 
-    <!-- BROADCAST -->
-    <div class="page" id="page-broadcast" style="display:none;">
-      <div class="page-head">
-        <div>
-          <div class="page-title">Broadcast</div>
-          <div class="page-sub">Kirim pesan WA ke satu tenant untuk uji coba, atau pengumuman ke semua klien</div>
-        </div>
-      </div>
-      <div class="panel-box">
-        <div class="field-label">Nomor Tujuan</div>
-        <input type="text" class="input-field" id="broadcastPhone" placeholder="08xxxxxxxxxx">
-        <div class="field-label">Pesan</div>
-        <textarea class="input-field" id="broadcastMessage" style="min-height:90px;" placeholder="Tulis pesan..."></textarea>
-        <button class="btn" style="margin-top:14px;" onclick="sendTestMessage()">Kirim Pesan</button>
-        <div id="broadcastResult" style="margin-top:12px;font-size:13.5px;"></div>
-      </div>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" onclick="closeSheet()">Batal</button>
+      <button class="btn btn-primary" onclick="saveLead()">Simpan</button>
     </div>
   </div>
 </div>
 
-<!-- Modal tambah tenant -->
-<div class="modal-backdrop" id="tenantModal">
-  <div class="modal-box">
-    <h3>Tambah Klien Baru</h3>
-    <div class="field-label">Nama Toko</div>
-    <input type="text" class="input-field" id="newTenantName">
-    <div class="field-label">Nama Pemilik</div>
-    <input type="text" class="input-field" id="newTenantOwner">
-    <div class="field-label">Email (buat login pemilik)</div>
-    <input type="email" class="input-field" id="newTenantEmail">
-    <div class="field-label">Password Awal</div>
-    <input type="text" class="input-field" id="newTenantPassword">
-    <div class="field-label">Paket</div>
-    <select class="input-field" id="newTenantPlan">
-      <option value="trial">Trial (kuota 50)</option>
-      <option value="basic">Basic (kuota 500)</option>
-      <option value="pro">Pro (kuota 2000)</option>
-    </select>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeAddTenant()">Batal</button>
-      <button class="btn" onclick="saveTenant()">Simpan</button>
-    </div>
-  </div>
-</div>
-
+<!-- Firebase SDK (versi compat, tanpa perlu build tool) -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
