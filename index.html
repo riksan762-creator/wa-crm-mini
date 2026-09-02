@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Follow Up — CRM WhatsApp Mini</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sheet-backdrop open" id="loginScreen" style="align-items:center;">
+  <div class="sheet" style="border-radius:20px;max-width:380px;">
+    <h2>Masuk</h2>
+    <div class="phone">Login pakai akun yang didaftarkan admin</div>
+    <div class="field-label">Email</div>
+    <input type="email" class="note-box" id="loginEmail" placeholder="email@toko.com">
+    <div class="field-label">Password</div>
+    <input type="password" class="note-box" id="loginPassword" placeholder="Password">
+    <div class="sheet-actions">
+      <button class="btn btn-primary" style="flex:1;" onclick="doLogin()">Masuk</button>
+    </div>
+    <div id="loginError" style="color:var(--rust);font-size:13px;margin-top:10px;"></div>
+  </div>
+</div>
+
+<div class="app" id="mainApp" style="display:none;">
+  <header>
+    <div>
+      <div class="brand-name" id="brandName">Toko Anda</div>
+      <div class="brand-sub">Follow Up Leads</div>
+    </div>
+    <div class="avatar" id="avatarInitial">--</div>
+  </header>
+
+  <div class="summary">
+    <div class="num" id="overdueCount">0</div>
+    <div class="label">leads belum di-follow up lebih dari 2 hari</div>
+  </div>
+
+  <div class="filters" id="filters">
+    <div class="chip active" data-f="semua">Semua</div>
+    <div class="chip" data-f="baru">Baru</div>
+    <div class="chip" data-f="proses">Diproses</div>
+    <div class="chip" data-f="deal">Deal</div>
+    <div class="chip" data-f="lewat">Terlambat</div>
+  </div>
+
+  <div class="list" id="list">
+    <div class="empty-state" id="emptyState">Memuat data...</div>
+  </div>
+</div>
+
+<button class="fab" onclick="openSheet(null)">+ Tambah Lead Manual</button>
+
+<div class="sheet-backdrop" id="backdrop">
+  <div class="sheet">
+    <button class="close-x" onclick="closeSheet()">&times;</button>
+    <div class="sheet-handle"></div>
+    <h2 id="sheetName">Nama Lead</h2>
+    <div class="phone" id="sheetPhone">08xx-xxxx-xxxx</div>
+
+    <div class="field-label">Status</div>
+    <div class="status-row" id="statusRow">
+      <div class="status-opt" data-s="baru">Baru</div>
+      <div class="status-opt" data-s="proses">Diproses</div>
+      <div class="status-opt" data-s="deal">Deal</div>
+      <div class="status-opt" data-s="batal">Batal</div>
+    </div>
+
+    <div class="field-label" id="nameFieldLabel" style="display:none;">Nama Lead</div>
+    <input type="text" class="note-box" id="nameInput" style="display:none;" placeholder="Nama calon pembeli">
+    <div class="field-label" id="phoneFieldLabel" style="display:none;">Nomor WhatsApp</div>
+    <input type="text" class="note-box" id="phoneInput" style="display:none;" placeholder="08xxxxxxxxxx">
+
+    <div class="field-label">Catatan follow up</div>
+    <textarea class="note-box" id="noteBox" placeholder="Tulis catatan, misalnya: sudah kirim katalog, tunggu konfirmasi..."></textarea>
+
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" onclick="closeSheet()">Batal</button>
+      <button class="btn btn-primary" onclick="saveLead()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDK (versi compat, tanpa perlu build tool) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
