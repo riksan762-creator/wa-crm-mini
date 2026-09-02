@@ -1,9 +1,5 @@
-// GANTI seluruh isi objek ini dengan config dari Firebase Console punya lo:
-// Firebase Console -> Project Settings -> General -> scroll ke "Your apps" -> SDK setup and configuration
-//
-// Catatan: apiKey Firebase yang di sini BUKAN rahasia, aman ditaro di kode publik/GitHub.
-// Yang harus dirahasiakan cuma API key WhatsApp (Fonnte/Wablas dll), itu disimpen
-// terpisah di Cloudflare Worker, bukan di sini.
+// Isi sama persis dengan firebase-config.js di folder user-app,
+// karena admin panel dan user app pakai project Firebase yang sama.
 
 const firebaseConfig = {
   apiKey: "GANTI_DENGAN_API_KEY_FIREBASE",
